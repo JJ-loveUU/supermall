@@ -5,14 +5,22 @@
             <div slot="center">购物街</div>
         </navbar>
         <tabcontrol class="fixTabControl" :texts="types"  v-show="isShowTabbar"></tabcontrol>
-        <scroll :probeType="3" class="content" ref="scroll" @scroll="scroll" @pullingUp="loadMore" >
+       <!-- <scroll :probeType="3" class="content" ref="scroll" @scroll="scroll" @pullingUp="loadMore" >
             <homeswiper :banner="banner" @calcOffsetTop="calcOffsetTop"></homeswiper>
             <recommend :recommend="recommend" @calcOffsetTop="calcOffsetTop"></recommend>
             <futureview @calcOffsetTop="calcOffsetTop"></futureview>
-
+            <tabcontrol :texts="types" @changeType="changeNowType" ref="tabC"></tabcontrol>
+            <productsshow :products="goods[currenttype].list" ></productsshow>
+        </scroll>-->
+        <scroll ref="scroll" :probeType="3" class="content" >
+            <tabcontrol :texts="types" @changeType="changeNowType" ref="tabC"></tabcontrol>
+            <recommend :recommend="recommend" @calcOffsetTop="calcOffsetTop"></recommend>
+            <futureview @calcOffsetTop="calcOffsetTop"></futureview>
             <tabcontrol :texts="types" @changeType="changeNowType" ref="tabC"></tabcontrol>
             <productsshow :products="goods[currenttype].list" ></productsshow>
         </scroll>
+
+
         <backtop @click.native="clickBackTop" v-show="isShowBackTop"></backtop><!--不加native在组件上的这个方法不生效-->
     </div>
 </template>
@@ -88,7 +96,6 @@
                 }).then(res=>{
                     this.goods[type].page=this.goods[type].page+1;
                     this.goods[type].list.push(...res.data.list);//加返回的结果加入到原数组
-
                 })
             },
             MgetHomeMultiData(){
@@ -107,7 +114,7 @@
             },
             scroll(position){
                 this.isShowBackTop=-position.y>1000;
-                console.log(this.$refs.tabC.$el.offsetTop,position.y);
+                console.log(1)
                 this.isShowTabbar=-position.y>=this.tabControlOffsetTop;
             },
             loadMore(){
@@ -116,7 +123,7 @@
             },
             calcOffsetTop(){
                 //計算tabcontrol的offsettop的值
-                this.tabControlOffsetTop=this.$refs.tabC.$el.offsetTop;
+                /*this.tabControlOffsetTop=this.$refs.tabC.$el.offsetTop;*/
             }
 
         }
@@ -144,7 +151,7 @@
         height: calc(100vh - 93px);*/
         left: 0;
         right: 0;
-        top: 0px;
+        top: 44px;
         bottom: 49px;
         position: absolute;
         overflow: hidden;
