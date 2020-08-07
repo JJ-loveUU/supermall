@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<button onclick="changeA()">点击</button>
+<script>
+  function test(){
+    let a = 1;
+    return function changeA(){
+      a ++;
+      console.log(a);
+    }
+  }
+
+  const changeA = test();
+
+</script>
+</body>
+</html>
