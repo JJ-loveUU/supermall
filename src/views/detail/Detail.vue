@@ -7,6 +7,7 @@
       <shopitem :shop="shop"></shopitem>
       <detailinfo :detailInfo="detailInfo"></detailinfo>
       <DetailParamInfo :detailParamInfo="detailParamInfo"></DetailParamInfo>
+      <DetailComments :detailComment="detailComment"></DetailComments>
     </scroll>
 
   </div>
@@ -22,6 +23,7 @@
   import shopitem from './childComp/ShopItem.vue'
   import detailinfo from './childComp/DetailInfo.vue'
   import DetailParamInfo from './childComp/DetailParamInfo.vue'
+  import DetailComments from './childComp/DetailComments.vue'
   import {getDetail,Goods,Shop,GoodsParam} from 'network/detail.js'
   import {debounce} from 'common/utils.js'
 
@@ -34,7 +36,8 @@
       shopitem,
       scroll,
       detailinfo,
-      DetailParamInfo
+      DetailParamInfo,
+      DetailComments,
 
     },
     data() {
@@ -44,7 +47,8 @@
         goods:{},
         shop:{},
         detailInfo:{},
-        detailParamInfo:{}
+        detailParamInfo:{},
+        detailComment:{}
       }
     },
     mounted(){
@@ -66,6 +70,7 @@
         this.shop=new Shop(data.shopInfo);
         this.detailInfo=data.detailInfo;
         this.detailParamInfo=new GoodsParam(data.itemParams.info,data.itemParams.rule);
+        if(data.rate.cRate>0)this.detailComment=data.rate.list[0];
 
       })
     }
