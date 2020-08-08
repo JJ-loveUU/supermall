@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="detail">
     <detailnavbar :currentIndex="currentIndex" @changeType="changeNowType"></detailnavbar>
     <detailswiper :topImages="topImages"></detailswiper>
     <shopitemprice :goods="goods"></shopitemprice>
+    <shopitem :shop="shop"></shopitem>
   </div>
 </template>
 
@@ -12,7 +13,8 @@
   import detailnavbar from './childComp/DetailNavbar.vue'
   import detailswiper from './childComp/DetailSwiper.vue'
   import shopitemprice from './childComp/ShopItemPrice.vue'
-  import {getDetail,Goods} from 'network/detail.js'
+  import shopitem from './childComp/ShopItem.vue'
+  import {getDetail,Goods,Shop} from 'network/detail.js'
 
   export default {
     name: "Detail",
@@ -20,13 +22,14 @@
       detailnavbar,
       detailswiper,
       shopitemprice,
+      shopitem
     },
     data() {
       return {
         currentIndex: 0,
         topImages: [],
-        goods:{}
-
+        goods:{},
+        shop:{}
       }
     },
     methods: {
@@ -39,11 +42,15 @@
         const data= res.result;
         this.topImages = data.itemInfo.topImages;
         this.goods = new Goods(data.itemInfo,data.columns,data.shopInfo.services);
+        this.shop=new Shop(data.shopInfo);
       })
     }
   }
 </script>
 
 <style scoped>
-
+.detail{
+  height: calc(100vh - 49px);
+  overflow: auto;
+}
 </style>

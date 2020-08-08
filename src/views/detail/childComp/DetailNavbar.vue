@@ -1,5 +1,5 @@
 <template>
-  <div class="detail" >
+  <div class="detail-nav" >
     <div @click="goback"><img src="@/assets/imgs/detail/left.svg" alt=""></div>
     <div v-for="(item,index) in ['商品','参数','评论','推荐']" :class="{active:currentIndex==index}" @click="clickText(index)">
       <span>{{item}}</span>
@@ -33,7 +33,7 @@
 
 <style scoped>
 
-  .detail{
+  .detail-nav{
     background-color: #fff;
     height: 30px;
     line-height: 30px;
@@ -42,13 +42,13 @@
     z-index: 9;
     border-bottom: 1px solid #ccc;
   }
-  .detail>div{
+  .detail-nav>div{
     font-size: 15px;
     flex: 1;
     text-align: center;
   }
 
-  .detail img{
+  .detail-nav img{
     width: 24px;
     height: 24px;
     margin-top: 2px;
