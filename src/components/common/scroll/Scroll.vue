@@ -50,7 +50,8 @@
         this.scroll && this.scroll.finishPullUp()
       },
       refresh(){
-        this.scroll && this.scroll.refresh()
+        this.scroll && this.scroll.refresh();
+        //console.log('refresh');
       },
       getScrollY(){
         return this.scroll ? this.scroll.y : 0
