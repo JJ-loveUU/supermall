@@ -3,8 +3,6 @@
       <div v-if="!isActive"><slot name="imgSlot"></slot></div>
       <div v-else><slot name="imgSlot-active"></slot></div>
       <div :style="cpactiveColor"><slot name="textSlot" ></slot></div>
-
-
     </div>
 </template>
 

@@ -4,16 +4,15 @@
     <navbar class="home-nav">
       <div slot="center">购物街</div>
     </navbar>
-    <tabcontrol class="fixTabControl" :texts="types"  v-show="isShowTabbar"></tabcontrol>
-    <scroll :probeType="3" class="content" ref="scroll" @scroll="scroll" @pullingUp="loadMore" >
+    <tabcontrol class="fixTabControl" :texts="types" :currentIndex="currentIndex" @changeType="changeNowType"  v-show="isShowTabbar"></tabcontrol>
+    <scroll ref="scroll" :probeType="3" class="content" @scroll="scroll" @pullingUp="loadMore">
       <homeswiper :banner="banner" @calcOffsetTop="calcOffsetTop"></homeswiper>
       <recommend :recommend="recommend" @calcOffsetTop="calcOffsetTop"></recommend>
       <futureview @calcOffsetTop="calcOffsetTop"></futureview>
-
-      <tabcontrol :texts="types" @changeType="changeNowType" ref="tabC"></tabcontrol>
+      <tabcontrol :texts="types" @changeType="changeNowType" :currentIndex="currentIndex" ref="tabC"></tabcontrol>
       <productsshow :products="goods[currenttype].list" ></productsshow>
     </scroll>
-    <backtop @click.native="clickBackTop" v-show="isShowBackTop"></backtop><!--不加native在组件上的这个方法不生效-->
+    <backtop @click.native="clickBackTop" v-show="isShowBackTop" ></backtop><!--不加native在组件上的这个方法不生效-->
   </div>
 </template>
 
@@ -54,12 +53,13 @@
           'sell':{page:0,list:[]}
         },
         currenttype:'pop',
+        currentIndex:0,
         types:['流行','新款','精选'],
         types_eg:['pop','new','sell'],
         isShowBackTop:  false,//是否显示backtop图标
         tabControlOffsetTop:0,//tabcontroll的offsettop
-        isShowTabbar:false
-
+        isShowTabbar:false, //是否显示tab_control
+        saveY:0 //记录离开这个组件时scroll的位置
       }
     },
     created() {
@@ -76,6 +76,13 @@
       this.$bus.$on('itemImageLoad',()=>{
         refresh() //这个方法的作用是重新计算高度，否则会出现无法滚动的bug
       })
+    },
+    activated(){
+      this.$refs.scroll.refresh();//刷新一下，否则会有问题
+      this.$refs.scroll.scrollTo(0,this.saveY,0);//keep-alive滚动到之前的位置
+    },
+    deactivated(){
+      this.saveY=this.$refs.scroll.getScrollY();
     },
     methods:{
       MgetProducts(type){
@@ -99,6 +106,7 @@
       },
       changeNowType(value){
         this.currenttype=this.types_eg[value];
+        this.currentIndex=value;
       },
       clickBackTop(){
         //this.$refs.ref，如果ref是普通的元素，则获取的就是这个dom元素；如果ref在组件上，则直接获取的是组件，可以直接调用组件
@@ -107,7 +115,6 @@
       },
       scroll(position){
         this.isShowBackTop=-position.y>1000;
-        console.log(this.$refs.tabC.$el.offsetTop,position.y);
         this.isShowTabbar=-position.y>=this.tabControlOffsetTop;
       },
       loadMore(){
@@ -144,7 +151,7 @@
     height: calc(100vh - 93px);*/
     left: 0;
     right: 0;
-    top: 0px;
+    top: 44px;
     bottom: 49px;
     position: absolute;
     overflow: hidden;

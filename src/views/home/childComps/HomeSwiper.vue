@@ -35,7 +35,7 @@
 </script>
 
 <style scoped>
-  #hy-swiper{
+ /* #hy-swiper{
     margin-top: 44px;
-  }
+  }*/
 </style>

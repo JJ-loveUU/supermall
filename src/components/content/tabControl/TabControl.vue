@@ -13,17 +13,15 @@
         type:Array,
         default(){
           return []
-        }
-      }
-    },
-    data(){
-      return {
-        currentIndex:0
+        },
+
+      },
+      currentIndex:{
+        type:Number
       }
     },
     methods:{
       clickText(index){
-        this.currentIndex=index;
         this.$emit('changeType',index)
       }
     }

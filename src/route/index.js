@@ -7,6 +7,7 @@ const Home =()=>import('views/home/Home')
 const Category =()=>import('views/category/Category')
 const Mine =()=>import('views/mine/Mine')
 const Shopcar =()=>import('views/shopcar/Shopcar')
+const Detail =()=>import('views/detail/Detail')
 
 export default new Router({
     routes: [
@@ -28,6 +29,10 @@ export default new Router({
         {
             path: '/shopcar',
             component:Shopcar
+        },
+        {
+            path:'/detail/:iid',
+            component:Detail
         }
 
     ],

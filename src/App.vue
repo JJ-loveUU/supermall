@@ -2,7 +2,7 @@
   <div id="app">
 
     <MainTab></MainTab>
-    <router-view></router-view>
+    <keep-alive exclude="Detail"><router-view></router-view></keep-alive>
   </div>
 </template>
 
@@ -10,8 +10,8 @@
   import MainTab from 'components/content/MainTab.vue'
 export default {
 
-  name: 'App',
   components: {
+  name: 'App',
     MainTab
   }
 }

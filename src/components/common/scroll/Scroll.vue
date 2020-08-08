@@ -33,7 +33,6 @@
       });
       //监听滚动事件
       this.scroll.on('scroll',(position,x,y)=>{
-        console.log(position)
         this.$emit('scroll',position);
       })
 
@@ -52,6 +51,9 @@
       },
       refresh(){
         this.scroll && this.scroll.refresh()
+      },
+      getScrollY(){
+        return this.scroll ? this.scroll.y : 0
       }
     }
   }
