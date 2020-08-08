@@ -5,6 +5,11 @@ export function getDetail(iid){
     url:'/detail?iid='+iid
   })
 }
+export function getDetailRecommend(){
+  return request({
+    url:'/recommend'
+  })
+}
 
 export class Goods {
   constructor(itemInfo, columns, services) {

@@ -25,12 +25,10 @@
   import futureview from 'views/home/childComps/FutureView.vue'
   import tabcontrol from 'components/content/tabControl/TabControl.vue'
   import productsshow from 'components/content/productsChoose/ProductsShow.vue'
-  import {debounce} from 'common/utils.js'
-
-
-
+  import {itemListenMixin} from 'common/mixin.js'
   import {getHomeMultiData} from 'network/home.js'
   import {getProducts} from 'network/home.js'
+
   export default {
     name: "Home",
     components:{
@@ -43,6 +41,7 @@
       scroll,
       backtop
     },
+    mixins:[itemListenMixin],
     data(){
       return {
         banner:[],
@@ -69,13 +68,6 @@
       this.MgetProducts('pop');
       this.MgetProducts('new');
       this.MgetProducts('sell');
-    },
-    mounted(){
-      //用$bus监听,注意是$on
-      const refresh =debounce(this.$refs.scroll.refresh,0);
-      this.$bus.$on('itemImageLoad',()=>{
-        refresh() //这个方法的作用是重新计算高度，否则会出现无法滚动的bug
-      })
     },
     activated(){
       this.$refs.scroll.refresh();//刷新一下，否则会有问题

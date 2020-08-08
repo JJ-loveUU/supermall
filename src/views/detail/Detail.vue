@@ -1,13 +1,16 @@
 <template>
   <div class="detail">
+    <detailnavbar class="detailnavbar" :currentIndex="currentIndex" @changeType="changeNowType"></detailnavbar>
     <scroll :probeType="3" class="content" ref="scroll">
-      <detailnavbar :currentIndex="currentIndex" @changeType="changeNowType"></detailnavbar>
+
       <detailswiper :topImages="topImages"></detailswiper>
       <shopitemprice :goods="goods"></shopitemprice>
       <shopitem :shop="shop"></shopitem>
       <detailinfo :detailInfo="detailInfo"></detailinfo>
       <DetailParamInfo :detailParamInfo="detailParamInfo"></DetailParamInfo>
       <DetailComments :detailComment="detailComment"></DetailComments>
+      <ProductsShow class="recommend"  :products="detailRecommend"></ProductsShow>
+
     </scroll>
 
   </div>
@@ -17,6 +20,7 @@
 
 
   import scroll  from 'components/common/scroll/Scroll.vue'
+  import ProductsShow  from 'components/content/productsChoose/ProductsShow.vue'
   import detailnavbar from './childComp/DetailNavbar.vue'
   import detailswiper from './childComp/DetailSwiper.vue'
   import shopitemprice from './childComp/ShopItemPrice.vue'
@@ -24,8 +28,8 @@
   import detailinfo from './childComp/DetailInfo.vue'
   import DetailParamInfo from './childComp/DetailParamInfo.vue'
   import DetailComments from './childComp/DetailComments.vue'
-  import {getDetail,Goods,Shop,GoodsParam} from 'network/detail.js'
-  import {debounce} from 'common/utils.js'
+  import {getDetail,getDetailRecommend,Goods,Shop,GoodsParam} from 'network/detail.js'
+  import {itemListenMixin} from 'common/mixin.js'
 
   export default {
     name: "Detail",
@@ -38,8 +42,9 @@
       detailinfo,
       DetailParamInfo,
       DetailComments,
-
+      ProductsShow
     },
+    mixins:[itemListenMixin],
     data() {
       return {
         currentIndex: 0,
@@ -48,14 +53,9 @@
         shop:{},
         detailInfo:{},
         detailParamInfo:{},
-        detailComment:{}
+        detailComment:{},
+        detailRecommend:[],
       }
-    },
-    mounted(){
-      const refresh = debounce( this.$refs.scroll.refresh,300);
-      this.$bus.$on('imageLoad',()=>{
-        refresh() //这个方法的作用是重新计算高度，否则会出现无法滚动的bug
-      })
     },
     methods: {
       changeNowType(value) {
@@ -71,7 +71,9 @@
         this.detailInfo=data.detailInfo;
         this.detailParamInfo=new GoodsParam(data.itemParams.info,data.itemParams.rule);
         if(data.rate.cRate>0)this.detailComment=data.rate.list[0];
-
+      });
+      getDetailRecommend().then((res)=>{
+        this.detailRecommend=res.data.list;
       })
     }
   }
@@ -87,7 +89,20 @@
 }
 
   .content{
-    height: 100%;
+    height: calc(100% - 30px);
     overflow: hidden;
+    margin-top: 30px;
+
+  }
+
+  .recommend{
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+  }
+
+  .detailnavbar{
+    position: fixed;
+    left: 0;
+    right: 0;
   }
 </style>
