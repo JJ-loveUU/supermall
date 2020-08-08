@@ -6,6 +6,7 @@
       <shopitemprice :goods="goods"></shopitemprice>
       <shopitem :shop="shop"></shopitem>
       <detailinfo :detailInfo="detailInfo"></detailinfo>
+      <DetailParamInfo :detailParamInfo="detailParamInfo"></DetailParamInfo>
     </scroll>
 
   </div>
@@ -20,7 +21,8 @@
   import shopitemprice from './childComp/ShopItemPrice.vue'
   import shopitem from './childComp/ShopItem.vue'
   import detailinfo from './childComp/DetailInfo.vue'
-  import {getDetail,Goods,Shop} from 'network/detail.js'
+  import DetailParamInfo from './childComp/DetailParamInfo.vue'
+  import {getDetail,Goods,Shop,GoodsParam} from 'network/detail.js'
   import {debounce} from 'common/utils.js'
 
   export default {
@@ -31,7 +33,8 @@
       shopitemprice,
       shopitem,
       scroll,
-      detailinfo
+      detailinfo,
+      DetailParamInfo
 
     },
     data() {
@@ -40,7 +43,8 @@
         topImages: [],
         goods:{},
         shop:{},
-        detailInfo:{}
+        detailInfo:{},
+        detailParamInfo:{}
       }
     },
     mounted(){
@@ -61,6 +65,8 @@
         this.goods = new Goods(data.itemInfo,data.columns,data.shopInfo.services);
         this.shop=new Shop(data.shopInfo);
         this.detailInfo=data.detailInfo;
+        this.detailParamInfo=new GoodsParam(data.itemParams.info,data.itemParams.rule);
+
       })
     }
   }
