@@ -1,34 +1,50 @@
 <template>
 	<div class="shipItemPrice">
-		<div class="description">秋装女2018款反反复复付付付付付付付付付付付付付付反反复复付付付付付付付</div>
+		<div class="description" >{{goods.title}}</div>
 		<div class="price">
-			<div class="newPrice"><span >￥</span><span >109.00</span></div>
-			<div class="oldPrice"><span >￥</span><span >123.00</span></div>
-			<span class="sepcPrice">今日特价</span>
+			<div class="newPrice"><span ></span><span >{{goods.newPrice}}</span></div>
+			<div class="oldPrice"><span ></span><span >{{goods.oldPrice}}</span></div>
+			<span class="sepcPrice">{{goods.discount}}</span>
 		</div>
 		<div class="sell-star">
-			<div class="sell">销量4173</div>
-			<div class="star">收藏167人</div>
-			<div class="service1">72小时发货</div>
+			<div class="sell" v-if="goods.columns">{{goods.columns[0]}}</div>
+			<div class="star"  v-if="goods.columns">{{goods.columns[1]}}</div>
+			<div class="service1" v-if="goods.services">{{goods.services[goods.services.length-1].name}}</div>
 		</div>
-		<div class="services">
-			<div>退货补运费</div>
-			<div>全国包邮</div>
-			<div>7天无理由包退</div>
+		<div class="services" v-if="goods.services">
+			<div v-for="index in 3" class="service2" >
+				<img v-if="goods.services[index-1].icon" :src="goods.services[index-1].icon" >
+				<img v-if="!goods.services[index-1].icon" src="@/assets/imgs/detail/yes.svg" >
+				<span>{{goods.services[index-1].name}}</span>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
 	export default {
-		name: "ShopItemPrice"
+		name: "ShopItemPrice",
+		props:{
+			goods:{
+				type:Object,
+				default(){
+					return {}
+				}
+			}
+		},
+		data(){
+			return {logo:'javascript:this.src="'+ require('../../../assets/imgs/detail/yes.svg') + '"'}
+		}
+
+
 	}
 </script>
 
 <style scoped>
 
 	.shipItemPrice{
-		padding: 0 10px;
+		padding: 0 10px 10px;
+		border-bottom: 5px solid #f9f7f7;
 	}
 
 	.description{
@@ -64,6 +80,8 @@
 	.sell-star{
 		margin-top: 20px;
 		display: flex;
+		border-bottom: 1px solid #ccc;
+		padding-bottom: 10px;
 	}
 
 	.sell-star div{
@@ -79,6 +97,36 @@
 	.service1{
 		text-align: right;
 	}
+
+	.services{
+		font-size: 16px;
+		display: flex;
+		margin-top:  20px;
+	}
+
+	.services div{
+		flex: 1;
+		font-size: 13px;
+		color: #000;
+	}
+
+
+
+	.services img{
+		width: 14px;
+		height: 14px;
+		position: relative;
+		left: 0px;
+		top: 2px;
+	}
+
+	.services div:nth-child(2){
+		text-align: center;
+	}
+	.services div:nth-child(3){
+		text-align: right;
+	}
+
 
 
 </style>
