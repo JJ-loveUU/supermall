@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <detailnavbar class="detailnavbar" :currentIndex="currentIndex" @changeType="changeNowType"></detailnavbar>
+    <detailnavbar ref="detailnavbar" class="detailnavbar" :currentIndex="currentIndex" @changeType="changeNowType"></detailnavbar>
     <scroll :probeType="3" class="content" ref="scroll" @scroll="scroll">
 
       <detailswiper :topImages="topImages" ref="deailswiper"></detailswiper>
@@ -10,9 +10,8 @@
       <DetailParamInfo :detailParamInfo="detailParamInfo" ref="deailparam"></DetailParamInfo>
       <DetailComments :detailComment="detailComment" ref="deailcomment"></DetailComments>
       <ProductsShow class="recommend"  :products="detailRecommend"  ref="deailrecommend"></ProductsShow>
-
     </scroll>
-
+    <backtop @click.native="clickBackTop" v-show="isShowBackTop" ></backtop><!--不加native在组件上的这个方法不生效-->
   </div>
 </template>
 
@@ -29,7 +28,7 @@
   import DetailParamInfo from './childComp/DetailParamInfo.vue'
   import DetailComments from './childComp/DetailComments.vue'
   import {getDetail,getDetailRecommend,Goods,Shop,GoodsParam} from 'network/detail.js'
-  import {itemListenMixin} from 'common/mixin.js'
+  import {backTopmix} from 'common/mixin.js'
   import {debounce} from 'common/utils'
 
   export default {
@@ -68,14 +67,24 @@
         this.$refs.scroll.scrollTo(0,-this.topoffsets[value],0);
       },
       scroll(position){
-        //console.log(position);
+        const y = -position.y;
+        for(let i =0;i<this.topoffsets.length;i++){
+          if ((i!=this.currentIndex) && (y>=this.topoffsets[i] && y< this.topoffsets[i+1])){
+              this.currentIndex=i;
+              this.$refs.detailnavbar.currentIndex=i;
+              break;
+          }
+        }
+
+        //判断是否显示backtop图标
+        this.backtopListen(position);
       },
       detailImageLoad(){
         this.newRefresh();
         this.getThemeTopY();
       }
     },
-    //mixins:[itemListenMixin],
+    mixins:[backTopmix],
     created() {
 
       //请求数据
@@ -98,6 +107,7 @@
         const deailcomment= this.$refs.deailcomment.$el.offsetTop;
         const deailrecommend= this.$refs.deailrecommend.$el.offsetTop;
         this.topoffsets=[deailswiper,deailparam,deailcomment,deailrecommend];
+        this.topoffsets.push(Number.MAX_VALUE);
         console.log(this.topoffsets)
       },100)
 

@@ -19,13 +19,14 @@
 <script>
   import navbar from 'components/common/navBar/NavBar.vue'
   import scroll from 'components/common/scroll/Scroll.vue'
-  import backtop from 'components/common/backTop/BackTop.vue'
   import homeswiper from 'views/home/childComps/HomeSwiper.vue'
   import recommend from 'views/home/childComps/Recommend.vue'
   import futureview from 'views/home/childComps/FutureView.vue'
   import tabcontrol from 'components/content/tabControl/TabControl.vue'
   import productsshow from 'components/content/productsChoose/ProductsShow.vue'
-  import {itemListenMixin} from 'common/mixin.js'
+
+
+  import {backTopmix} from 'common/mixin.js'
   import {getHomeMultiData} from 'network/home.js'
   import {getProducts} from 'network/home.js'
   import {debounce} from 'common/utils'
@@ -40,10 +41,9 @@
       futureview,
       tabcontrol,
       productsshow,
-      scroll,
-      backtop
+      scroll
     },
-    //mixins:[itemListenMixin],
+    mixins:[backTopmix],
     data(){
       return {
         banner:[],
@@ -57,7 +57,6 @@
         currentIndex:0,
         types:['流行','新款','精选'],
         types_eg:['pop','new','sell'],
-        isShowBackTop:  false,//是否显示backtop图标
         tabControlOffsetTop:0,//tabcontroll的offsettop
         isShowTabbar:false, //是否显示tab_control
         saveY:0, //记录离开这个组件时scroll的位置
@@ -113,14 +112,10 @@
         this.currenttype=this.types_eg[value];
         this.currentIndex=value;
       },
-      clickBackTop(){
-        //this.$refs.ref，如果ref是普通的元素，则获取的就是这个dom元素；如果ref在组件上，则直接获取的是组件，可以直接调用组件
-        //上的属性和方法等等
-        this.$refs.scroll.scrollTo(0,0)
-      },
       scroll(position){
-        this.isShowBackTop=-position.y>1000;
         this.isShowTabbar=-position.y>=this.tabControlOffsetTop;
+        //判断是否显示backtop图标
+        this.backtopListen(position);
       },
       loadMore(){
         this.MgetProducts(this.currenttype);
