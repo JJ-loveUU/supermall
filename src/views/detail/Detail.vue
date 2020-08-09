@@ -57,7 +57,9 @@
         detailComment:{},
         detailRecommend:[],
         topoffsets:[0,0,0,0],
-        getThemeTopY:null
+        getThemeTopY:null,
+        itemImgListen:null,
+        newRefresh:null
       }
     },
     methods: {
@@ -73,7 +75,7 @@
         this.getThemeTopY();
       }
     },
-    mixins:[itemListenMixin],
+    //mixins:[itemListenMixin],
     created() {
 
       //请求数据
@@ -100,6 +102,16 @@
       },100)
 
 
+    },
+    mounted(){
+      this.newRefresh = debounce( this.$refs.scroll.refresh,0);
+      this.itemImgListen=()=>{
+        this.newRefresh() //这个方法的作用是重新计算高度，否则会出现无法滚动的bug
+      };
+      this.$bus.$on('itemImageLoad',this.itemImgListen);
+    },
+    destroyed() {
+      this.$bus.$off('itemImageLoad',this.itemImgListen);
     }
   }
 </script>

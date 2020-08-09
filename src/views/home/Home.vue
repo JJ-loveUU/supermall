@@ -28,6 +28,8 @@
   import {itemListenMixin} from 'common/mixin.js'
   import {getHomeMultiData} from 'network/home.js'
   import {getProducts} from 'network/home.js'
+  import {debounce} from 'common/utils'
+
 
   export default {
     name: "Home",
@@ -41,7 +43,7 @@
       scroll,
       backtop
     },
-    mixins:[itemListenMixin],
+    //mixins:[itemListenMixin],
     data(){
       return {
         banner:[],
@@ -58,7 +60,9 @@
         isShowBackTop:  false,//是否显示backtop图标
         tabControlOffsetTop:0,//tabcontroll的offsettop
         isShowTabbar:false, //是否显示tab_control
-        saveY:0 //记录离开这个组件时scroll的位置
+        saveY:0, //记录离开这个组件时scroll的位置
+        itemImgListen:null,
+        newRefresh:null
       }
     },
     created() {
@@ -69,6 +73,13 @@
       this.MgetProducts('new');
       this.MgetProducts('sell');
     },
+    mounted(){
+      this.newRefresh = debounce( this.$refs.scroll.refresh,0);
+      this.itemImgListen=()=>{
+        this.newRefresh() //这个方法的作用是重新计算高度，否则会出现无法滚动的bug
+      };
+      this.$bus.$on('itemImageLoad',this.itemImgListen);
+    },
     activated(){
       this.$refs.scroll.refresh();//刷新一下，否则会有问题
       this.$refs.scroll.scrollTo(0,this.saveY,0);//keep-alive滚动到之前的位置
@@ -76,6 +87,7 @@
     },
     deactivated(){
       this.saveY=this.$refs.scroll.getScrollY();
+      this.$bus.$off('itemImageLoad',this.itemImgListen);
     },
     methods:{
       MgetProducts(type){
@@ -120,6 +132,9 @@
         this.tabControlOffsetTop=this.$refs.tabC.$el.offsetTop;
       }
 
+    },
+    destroyed() {
+      this.$bus.$off('itemImageLoad',this.itemImgListen);
     }
   }
 </script>
