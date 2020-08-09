@@ -23,6 +23,7 @@
     methods:{
       clickText(index){
         this.currentIndex=index;
+        this.$emit('changeType',index);
       },
       goback(){
         this.$router.go(-1);

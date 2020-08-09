@@ -34,6 +34,7 @@
       //监听滚动事件
       this.scroll.on('scroll',(position,x,y)=>{
         this.$emit('scroll',position);
+        //console.log(position);
       })
 
       //监听上拉加载事件

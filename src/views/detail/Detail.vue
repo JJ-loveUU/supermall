@@ -1,15 +1,15 @@
 <template>
   <div class="detail">
     <detailnavbar class="detailnavbar" :currentIndex="currentIndex" @changeType="changeNowType"></detailnavbar>
-    <scroll :probeType="3" class="content" ref="scroll">
+    <scroll :probeType="3" class="content" ref="scroll" @scroll="scroll">
 
-      <detailswiper :topImages="topImages"></detailswiper>
+      <detailswiper :topImages="topImages" ref="deailswiper"></detailswiper>
       <shopitemprice :goods="goods"></shopitemprice>
       <shopitem :shop="shop"></shopitem>
-      <detailinfo :detailInfo="detailInfo"></detailinfo>
-      <DetailParamInfo :detailParamInfo="detailParamInfo"></DetailParamInfo>
-      <DetailComments :detailComment="detailComment"></DetailComments>
-      <ProductsShow class="recommend"  :products="detailRecommend"></ProductsShow>
+      <detailinfo :detailInfo="detailInfo" @detailImageLoad="detailImageLoad"></detailinfo>
+      <DetailParamInfo :detailParamInfo="detailParamInfo" ref="deailparam"></DetailParamInfo>
+      <DetailComments :detailComment="detailComment" ref="deailcomment"></DetailComments>
+      <ProductsShow class="recommend"  :products="detailRecommend"  ref="deailrecommend"></ProductsShow>
 
     </scroll>
 
@@ -30,6 +30,7 @@
   import DetailComments from './childComp/DetailComments.vue'
   import {getDetail,getDetailRecommend,Goods,Shop,GoodsParam} from 'network/detail.js'
   import {itemListenMixin} from 'common/mixin.js'
+  import {debounce} from 'common/utils'
 
   export default {
     name: "Detail",
@@ -42,9 +43,9 @@
       detailinfo,
       DetailParamInfo,
       DetailComments,
-      ProductsShow
+      ProductsShow,
+
     },
-    mixins:[itemListenMixin],
     data() {
       return {
         currentIndex: 0,
@@ -55,14 +56,27 @@
         detailParamInfo:{},
         detailComment:{},
         detailRecommend:[],
+        topoffsets:[0,0,0,0],
+        getThemeTopY:null
       }
     },
     methods: {
       changeNowType(value) {
         this.currentIndex = value;
+        this.$refs.scroll.scrollTo(0,-this.topoffsets[value],0);
+      },
+      scroll(position){
+        //console.log(position);
+      },
+      detailImageLoad(){
+        this.newRefresh();
+        this.getThemeTopY();
       }
     },
+    mixins:[itemListenMixin],
     created() {
+
+      //请求数据
       getDetail(this.$route.params.iid).then((res) => {
         const data= res.result;
         this.topImages = data.itemInfo.topImages;
@@ -75,6 +89,17 @@
       getDetailRecommend().then((res)=>{
         this.detailRecommend=res.data.list;
       })
+
+      this.getThemeTopY=debounce(()=>{
+        const deailswiper= this.$refs.deailswiper.$el.offsetTop;
+        const deailparam= this.$refs.deailparam.$el.offsetTop;
+        const deailcomment= this.$refs.deailcomment.$el.offsetTop;
+        const deailrecommend= this.$refs.deailrecommend.$el.offsetTop;
+        this.topoffsets=[deailswiper,deailparam,deailcomment,deailrecommend];
+        console.log(this.topoffsets)
+      },100)
+
+
     }
   }
 </script>
@@ -92,7 +117,7 @@
     height: calc(100% - 30px);
     overflow: hidden;
     margin-top: 30px;
-
+    position: relative;
   }
 
   .recommend{

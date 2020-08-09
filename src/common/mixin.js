@@ -1,15 +1,17 @@
 import {debounce} from './utils'
 
+//混入
 export const itemListenMixin={
   data(){
     return {
-      itemImgListen:null
+      itemImgListen:null,
+      newRefresh:null
     }
   },
   mounted(){
-    const refresh = debounce( this.$refs.scroll.refresh,300);
+    this.newRefresh = debounce( this.$refs.scroll.refresh,0);
     this.itemImgListen=()=>{
-      refresh() //这个方法的作用是重新计算高度，否则会出现无法滚动的bug
+      this.newRefresh() //这个方法的作用是重新计算高度，否则会出现无法滚动的bug
     };
     this.$bus.$on('itemImageLoad',this.itemImgListen);
   },

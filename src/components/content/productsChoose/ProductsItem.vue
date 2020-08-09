@@ -25,6 +25,7 @@
         //这里使用事件总线发送一个事件，没加载完成一个图片，就用事件总线发射事件，我们在home中监听
         //这里不直接用$emit发发送给父节点的原因是要发射两次
         this.$bus.$emit('itemImageLoad');
+        //console.log(1111)
       },
       clickImage(){
         this.$router.push('/detail/'+this.product.iid);

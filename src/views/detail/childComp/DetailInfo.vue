@@ -22,7 +22,8 @@
     },
     methods:{
       loadImage(){
-        this.$bus.$emit('itemImageLoad');
+        //this.$bus.$emit('itemImageLoad');
+        this.$emit('detailImageLoad');
       }
     }
   }

@@ -72,6 +72,7 @@
     activated(){
       this.$refs.scroll.refresh();//刷新一下，否则会有问题
       this.$refs.scroll.scrollTo(0,this.saveY,0);//keep-alive滚动到之前的位置
+      this.$refs.scroll.refresh();//刷新一下，否则会有问题
     },
     deactivated(){
       this.saveY=this.$refs.scroll.getScrollY();
@@ -115,6 +116,7 @@
       },
       calcOffsetTop(){
         //計算tabcontrol的offsettop的值
+        this.$refs.scroll.refresh();
         this.tabControlOffsetTop=this.$refs.tabC.$el.offsetTop;
       }
 
