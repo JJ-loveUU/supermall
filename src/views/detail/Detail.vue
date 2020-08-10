@@ -12,6 +12,7 @@
       <ProductsShow class="recommend"  :products="detailRecommend"  ref="deailrecommend"></ProductsShow>
     </scroll>
     <backtop @click.native="clickBackTop" v-show="isShowBackTop" ></backtop><!--不加native在组件上的这个方法不生效-->
+    <DetailButtonBar @addToShopCar="addToShopCar"></DetailButtonBar>
   </div>
 </template>
 
@@ -27,6 +28,9 @@
   import detailinfo from './childComp/DetailInfo.vue'
   import DetailParamInfo from './childComp/DetailParamInfo.vue'
   import DetailComments from './childComp/DetailComments.vue'
+  import DetailButtonBar from './childComp/DetailButtonBar.vue'
+
+
   import {getDetail,getDetailRecommend,Goods,Shop,GoodsParam} from 'network/detail.js'
   import {backTopmix} from 'common/mixin.js'
   import {debounce} from 'common/utils'
@@ -43,7 +47,7 @@
       DetailParamInfo,
       DetailComments,
       ProductsShow,
-
+      DetailButtonBar
     },
     data() {
       return {
@@ -82,11 +86,21 @@
       detailImageLoad(){
         this.newRefresh();
         this.getThemeTopY();
+      },
+      addToShopCar(){
+        const obj = {};
+        obj.iid = this.iid;
+        obj.imgURL = this.topImages[0];
+        obj.title = this.goods.title;
+        obj.desc = this.goods.desc;
+        obj.newPrice = this.goods.nowPrice;
+        obj.isChecked=false;
+        this.$store.commit('addProduct',obj)
       }
     },
     mixins:[backTopmix],
     created() {
-
+      this.iid = this.$route.params.iid;
       //请求数据
       getDetail(this.$route.params.iid).then((res) => {
         const data= res.result;
@@ -108,7 +122,6 @@
         const deailrecommend= this.$refs.deailrecommend.$el.offsetTop;
         this.topoffsets=[deailswiper,deailparam,deailcomment,deailrecommend];
         this.topoffsets.push(Number.MAX_VALUE);
-        console.log(this.topoffsets)
       },100)
 
 
@@ -136,10 +149,11 @@
 }
 
   .content{
-    height: calc(100% - 30px);
+    height: calc(100% - 30px - 60px);
     overflow: hidden;
     margin-top: 30px;
     position: relative;
+    margin-bottom: 60px;
   }
 
   .recommend{
