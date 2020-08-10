@@ -1,7 +1,7 @@
 <template>
   <div class="product-item">
     <a href="javascript:void(0)" @click.stop="clickImage">
-      <img :src="getImage" alt="" @load="imageLoad">
+      <img v-lazy="getImage" alt="" @load="imageLoad">
       <p class="info">{{product.title}}</p>
       <p class="price-star"><span class="price">{{product.price}}</span><span class="star"><img src="@/assets/imgs/products/star.svg" alt="">{{product.cfav}}</span></p>
     </a>
