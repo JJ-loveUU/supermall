@@ -48,9 +48,9 @@
 
     .scroll{
         margin-top: 44px;
-        height: calc(100vh - 44px - 49px);
+        height: calc(100vh - 44px - 49px - 38px);
         overflow: hidden;
-        margin-bottom: 49px;
+        margin-bottom: calc(49px + 38px);
         position: relative;
     }
 

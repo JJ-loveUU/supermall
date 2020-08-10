@@ -12,15 +12,7 @@ Vue.use(Vuex);
      products:[]
    },
    mutations:{
-     addProduct(state,stu){
-       const oldProduct = state.products.find(item=>item.iid===stu.iid);
-       if (oldProduct){
-         oldProduct.count++;
-       }else{
-         stu.count=1;
-         state.products.push(stu);
-       }
-     },
+
      checkCart(state,iid){
        const oldProduct = state.products.find(item=>item.iid===iid);
        oldProduct.isChecked=!oldProduct.isChecked;
@@ -70,7 +62,21 @@ Vue.use(Vuex);
             resolve('11111111')
           },3000)
         }))
-      }
+      },
+
+     addProduct(context,stu){
+       return new Promise(((resolve, reject) => {
+         const oldProduct = context.state.products.find(item=>item.iid===stu.iid);
+         if (oldProduct){
+           oldProduct.count++;
+           resolve('商品数量加1')
+         }else{
+           stu.count=1;
+           context.state.products.push(stu);
+           resolve('添加商品成功')
+         }
+       }))
+     },
    },
    getters:{
      cartLength(state){

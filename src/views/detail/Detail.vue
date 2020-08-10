@@ -95,7 +95,9 @@
         obj.desc = this.goods.desc;
         obj.newPrice = this.goods.nowPrice;
         obj.isChecked=false;
-        this.$store.commit('addProduct',obj)
+        this.$store.dispatch('addProduct',obj).then((res)=>{
+          this.$toast.show(res,3000);
+        })
       }
     },
     mixins:[backTopmix],
